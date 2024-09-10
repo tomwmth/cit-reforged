@@ -72,6 +72,14 @@ sourceSets {
 }
 
 tasks.jar {
+    from(rootProject.file("LICENSE")) {
+        into("META-INF/")
+    }
+
+    from(rootProject.file("NOTICE")) {
+        into("META-INF/")
+    }
+
     archiveFileName.set("${modId}-mc${mcVersion}-${modVersion}.jar")
 
     manifest.attributes(
