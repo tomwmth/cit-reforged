@@ -72,6 +72,8 @@ sourceSets {
 }
 
 tasks.jar {
+    archiveFileName.set("${modId}-mc${mcVersion}-${modVersion}.jar")
+
     manifest.attributes(
         mapOf(
             "MixinConfigs" to mixinConfig
