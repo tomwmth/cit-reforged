@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import dev.tomwmth.citreforged.cit.CITType;
 import dev.tomwmth.citreforged.defaults.common.ResewnItemModelIdentifier;
 import dev.tomwmth.citreforged.mixin.defaults.types.item.BlockModelAccessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.resources.model.Material;
@@ -11,9 +12,8 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.IOUtils;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
  */
 @Mixin(ModelBakery.class)
 public abstract class ModelBakeryMixin {
-    @Shadow @Final protected ResourceManager resourceManager;
+    @Unique private final ResourceManager citresewn$resourceManager = Minecraft.getInstance().getResourceManager();
 
     @Inject(method = "loadBlockModel", cancellable = true, at = @At("HEAD"))
     public void citresewn$forceLiteralResewnModelIdentifier(ResourceLocation originalId, CallbackInfoReturnable<BlockModel> cir) {
         if (ResewnItemModelIdentifier.marked(originalId)) {
             final ResourceLocation id = ResewnItemModelIdentifier.unpack(originalId);
-            try (InputStream is = this.resourceManager.getResource(id).getInputStream()) {
+            try (InputStream is = this.citresewn$resourceManager.getResource(id).orElseThrow().open()) {
                 BlockModel json = BlockModel.fromString(IOUtils.toString(is, StandardCharsets.UTF_8));
                 json.name = id.toString();
                 json.name = json.name.substring(0, json.name.length() - 5);
@@ -45,7 +45,7 @@ public abstract class ModelBakeryMixin {
                         String originalPath = left.get().texture().getPath();
                         String[] split = originalPath.split("/");
                         if (originalPath.startsWith("./") || (split.length > 2 && split[1].equals("cit"))) {
-                            ResourceLocation resolvedIdentifier = CITType.resolveAsset(id, originalPath, "textures", ".png", this.resourceManager);
+                            ResourceLocation resolvedIdentifier = CITType.resolveAsset(id, originalPath, "textures", ".png", this.citresewn$resourceManager);
                             if (resolvedIdentifier != null)
                                 return Either.left(new Material(left.get().atlasLocation(), resolvedIdentifier));
                         }
@@ -57,7 +57,7 @@ public abstract class ModelBakeryMixin {
                 if (parentId != null) {
                     String[] parentIdPathSplit = parentId.getPath().split("/");
                     if (parentId.getPath().startsWith("./") || (parentIdPathSplit.length > 2 && parentIdPathSplit[1].equals("cit"))) {
-                        parentId = CITType.resolveAsset(id, parentId.getPath(), "models", ".json", this.resourceManager);
+                        parentId = CITType.resolveAsset(id, parentId.getPath(), "models", ".json", this.citresewn$resourceManager);
                         if (parentId != null)
                             ((BlockModelAccessor) json).setParentLocation(ResewnItemModelIdentifier.pack(parentId));
                     }
@@ -67,7 +67,7 @@ public abstract class ModelBakeryMixin {
                     String modelIdPath = override.getModel().getPath();
                     String[] modelIdPathSplit = modelIdPath.split("/");
                     if (modelIdPath.startsWith("./") || (modelIdPathSplit.length > 2 && modelIdPathSplit[1].equals("cit"))) {
-                        ResourceLocation resolvedOverridePath = CITType.resolveAsset(id, modelIdPath, "models", ".json", this.resourceManager);
+                        ResourceLocation resolvedOverridePath = CITType.resolveAsset(id, modelIdPath, "models", ".json", this.citresewn$resourceManager);
                         if (resolvedOverridePath != null)
                             return new ItemOverride(ResewnItemModelIdentifier.pack(resolvedOverridePath), override.getPredicates().collect(Collectors.toList()));
                     }

@@ -2,8 +2,6 @@ package dev.tomwmth.citreforged.defaults.cit.types;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import dev.tomwmth.citreforged.api.CITGlobalProperties;
 import dev.tomwmth.citreforged.api.CITTypeContainer;
 import dev.tomwmth.citreforged.cit.*;
@@ -21,6 +19,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import dev.tomwmth.citreforged.defaults.cit.conditions.ConditionEnchantments;
 
@@ -309,10 +308,10 @@ public class TypeEnchantment extends CITType {
                     float l = Util.getMillis() * CITResewnDefaultsConfig.INSTANCE.type_enchantment_scroll_multiplier * speed;
                     float x = (l % 110000f) / 110000f;
                     float y = (l % 30000f) / 30000f;
-                    Matrix4f matrix4f = Matrix4f.createTranslateMatrix(-x, y, 0.0f);
-                    matrix4f.multiply(Vector3f.ZP.rotationDegrees(rotation));
-                    matrix4f.multiply(Matrix4f.createScaleMatrix(scale, scale, scale));
-                    setTextureMatrix(matrix4f);
+                    setTextureMatrix(new Matrix4f()
+                            .translation(-x, y, 0.0F)
+                            .rotateZ(rotation)
+                            .scale(scale));
 
                     setShaderColor(r, g, b, a * methodIntensity.intensity);
                 }

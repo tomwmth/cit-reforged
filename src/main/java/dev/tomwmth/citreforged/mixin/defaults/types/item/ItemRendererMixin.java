@@ -6,10 +6,10 @@ import dev.tomwmth.citreforged.cit.CITContext;
 import dev.tomwmth.citreforged.defaults.cit.types.TypeItem;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -57,11 +57,11 @@ public abstract class ItemRendererMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void citresewn$fixMojankCITsContext(ItemStack stack, ItemTransforms.TransformType renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+    private void citresewn$fixMojankCITsContext(ItemStack stack, ItemDisplayContext displayContext, boolean leftHand, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         if (!CONTAINER.active() || this.citresewn$mojankCITModel == null)
             return;
 
-        if (renderMode == ItemTransforms.TransformType.GUI || renderMode == ItemTransforms.TransformType.GROUND || renderMode == ItemTransforms.TransformType.FIXED)
+        if (displayContext == ItemDisplayContext.GUI || displayContext == ItemDisplayContext.GROUND || displayContext == ItemDisplayContext.FIXED)
             ((TypeItem.BakedModelManagerMixinAccess) this.itemModelShaper.getModelManager()).citresewn$forceMojankModel(this.citresewn$mojankCITModel.get());
 
         this.citresewn$mojankCITModel = null;

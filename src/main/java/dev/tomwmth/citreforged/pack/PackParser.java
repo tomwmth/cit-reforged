@@ -10,10 +10,12 @@ import dev.tomwmth.citreforged.pack.format.PropertyValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -42,12 +44,13 @@ public final class PackParser {
                 for (String root : ROOTS) {
                     ResourceLocation identifier = new ResourceLocation(namespace, root + "/cit.properties");
                     try {
-                        if (pack.hasResource(PackType.CLIENT_RESOURCES, identifier)) {
-                            globalProperties.load(pack.getName(), identifier, pack.getResource(PackType.CLIENT_RESOURCES, identifier));
+                        IoSupplier<InputStream> propertiesSupplier = pack.getResource(PackType.CLIENT_RESOURCES, identifier);
+                        if (propertiesSupplier != null) {
+                            globalProperties.load(pack.packId(), identifier, propertiesSupplier.get());
                         }
                     } catch (FileNotFoundException ignored) {
                     } catch (Exception ex) {
-                        CITReforged.logError("Errored while loading global properties: {} from {}", identifier, pack.getName());
+                        CITReforged.logError("Errored while loading global properties: {} from {}", identifier, pack.packId());
                     }
                 }
             }
@@ -64,14 +67,16 @@ public final class PackParser {
         List<CIT<?>> cits = new ArrayList<>();
 
         for (String root : ROOTS) {
-            for (ResourceLocation identifier : resourceManager.listResources(root + "/cit", s -> s.endsWith(".properties"))) {
+            for (var entry : resourceManager.listResources(root + "/cit", s -> s.getPath().endsWith(".properties")).entrySet()) {
                 String packName = null;
-                try (Resource resource = resourceManager.getResource(identifier)) {
-                    cits.add(parseCIT(PropertyGroup.tryParseGroup(packName = resource.getSourceName(), identifier, resource.getInputStream()), resourceManager));
+                ResourceLocation key = entry.getKey();
+                Resource val = entry.getValue();
+                try {
+                    cits.add(parseCIT(PropertyGroup.tryParseGroup(packName = val.sourcePackId(), key, val.open()), resourceManager));
                 } catch (CITParsingException ex) {
                     CITReforged.logError("Errored while parsing CIT", ex);
                 } catch (Exception ex) {
-                    CITReforged.logError("Errored while loading CIT: {}{}", identifier, (packName == null ? "" : " from " + packName), ex);
+                    CITReforged.logError("Errored while loading CIT: {}{}", key, (packName == null ? "" : " from " + packName), ex);
                 }
             }
         }
