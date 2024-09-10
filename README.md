@@ -1,56 +1,24 @@
 <p align="center">
-  <img src="https://citresewn.shcm.io/img/project_description/logo_shadow.png" width="200px">
+  <img src="https://i.imgur.com/UU1fLcc.png" width="200px">
 </p>
 
-CIT Resewn is MCPatcher's CIT features re-written outside of optifine as a standalone mod for fabric.
+A fork of CIT Resewn for the Forge Mod Loader. It is a standalone implementation of MCPatcher's CIT features (most commonly found in OptiFine).
 
-The main CIT Resewn mod serves as an API to add types and conditions while CIT Resewn: Defaults uses that API to provide the default types and conditions that naturally come with the CIT format.
+> Because not everyone should have to use OptiFine
 
-## Downloads
-You can get CIT Resewn(bundled with Defaults) from Modrinth, Curse Forge or by compiling it from source
+## Ethos
+The existence of this fork is driven purely by the requirements of a separate project I am involved in. As a result, the development direction is largely dictated that other project. I am unlikely to do any work that isn't specifically needed by it. That being said, contributions are welcome if you find that some of the corners I have cut are not acceptable for your needs.
 
-              <a href="https://modrinth.com/mod/cit-resewn"><img src="https://citresewn.shcm.io/img/modrinth.png" width="50px"></a>       
-<a href="https://www.curseforge.com/minecraft/mc-mods/cit-resewn"><img src="https://citresewn.shcm.io/img/curseforge.png" width="50px"></a>
+## Versions
+- 1.18.2
+- 1.19.4 (planned)
+- 1.20.1 (planned)
+- 1.20.6 (planned)
 
-## CIT Docs
-Docs for CIT Resewn's usage are available over at https://citresewn.shcm.io
+## Changes
+- Defaults is no longer a seperate mod
+- Fabric-specific entrypoints have been removed in favour of an SPI
+- The commands and configuration GUIs have been removed
 
-## API
-
-CIT Resewn is distributed for development through Modrinth's Maven repository under `cit-resewn`.<br>
-Defaults can be added separately through the same Maven under `cit-resewn-defaults`.
-
-Gradle example:
-```groovy
-// Add the modrinth maven repository:
-repositories {
-    ..
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
-        }
-    }
-}
-
-dependencies {
-    ..
-    // Add the base CIT Resewn API to the project
-    modCompileOnly "maven.modrinth:cit-resewn:1.1.2+1.19.2"
-    // Add Defaults to the project
-    modCompileOnly "maven.modrinth:cit-resewn-defaults:1.1.2+1.19.2"
-}
-```
-
-API usage documentation will be available soon over at [the docs](https://citresewn.shcm.io/mods/mod_api/).
-
-For example usage of the CIT Resewn API, take a look at how Defaults does it.
-
-## Contributing
-
-Bug fixes and feature implementations are always welcome and will usually be accepted once verified to be ok/fit in the mod.
-
-Translations aren't really necessary but if you PR them there's no reason they won't be accepted.
-
-Lastly, the docs site is also open source, PRs can be made to the [docs branch](https://github.com/SHsuperCM/CITResewn/tree/docs).
+## Documentation
+This project does not have it's own documentation, however generally the upstream documentation at https://citresewn.shcm.io should be sufficient
