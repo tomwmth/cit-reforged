@@ -1,2 +1,0 @@
- - Fixed CITs not being checked on the first cache interval
- - Fixed CITs not matching correctly in cases where the root element of a json is a string

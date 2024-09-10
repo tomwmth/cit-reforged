@@ -1,0 +1,37 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.tomwmth.citreforged.mixin",
+  "plugin": "dev.tomwmth.citreforged.config.CITResewnMixinConfiguration",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "broken_paths.AbstractPackResourcesMixin",
+    "broken_paths.PackCompatibilityMixin",
+    "broken_paths.ReloadableResourceManagerMixin",
+    "broken_paths.ResourceLocationMixin",
+    "defaults.types.armor.ItemStackMixin",
+    "defaults.types.elytra.ItemStackMixin",
+    "defaults.types.enchantment.ItemStackMixin",
+    "defaults.types.item.ItemStackMixin"
+  ],
+  "client": [
+    "ModelBakeryMixin",
+    "defaults.common.ModelBakeryMixin",
+    "defaults.types.armor.HumanoidArmorLayerMixin",
+    "defaults.types.elytra.ElytraLayerMixin",
+    "defaults.types.enchantment.ElytraLayerMixin",
+    "defaults.types.enchantment.HumanoidArmorLayerMixin",
+    "defaults.types.enchantment.ItemRendererMixin",
+    "defaults.types.enchantment.MinecraftMixin",
+    "defaults.types.enchantment.RenderBuffersAccessor",
+    "defaults.types.enchantment.RenderStateShardAccessor",
+    "defaults.types.item.BlockModelAccessor",
+    "defaults.types.item.ItemRendererMixin",
+    "defaults.types.item.ModelBakeryMixin",
+    "defaults.types.item.ModelManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1,
+    "maxShiftBy": 5
+  }
+}

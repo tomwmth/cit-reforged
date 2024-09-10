@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+
+license = "MIT"
+issueTrackerURL = "{{ modRepo }}/issues"
+showAsResourcePack = false
+
+[[mods]]
+    modId = "{{ modId }}"
+    version = "{{ modVersion }}"
+    displayName = "{{ modName }}"
+    displayURL = "{{ modRepo }}"
+    logoFile = "logo.png"
+    authors = "tomwmth"
+    credits = "SHsuperCM, for the original Fabric mod"
+    displayTest = "IGNORE_ALL_VERSION"
+    description = '''
+    An implementation of MCPatcher's CIT features re-written outside of OptiFine as a standalone mod for Forge.
+
+    "Because not everyone should have to use OptiFine"
+    '''
+
+[[dependencies.{{ modId }}]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[40,)"
+    ordering = "NONE"
+    side = "CLIENT"
+
+[[dependencies.{{ modId }}]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "{{ mcVersion }}"
+    ordering = "NONE"
+    side = "CLIENT"

@@ -1,0 +1,7 @@
+package dev.tomwmth.citreforged;
+
+public final class Reference {
+    public static final String MOD_ID = "{{ modId }}";
+    public static final String MOD_NAME = "{{ modName }}";
+    public static final String MOD_GROUP = "{{ modGroup }}";
+}
