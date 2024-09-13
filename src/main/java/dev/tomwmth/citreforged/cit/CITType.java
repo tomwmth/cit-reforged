@@ -54,7 +54,7 @@ public abstract class CITType {
             if (!path.endsWith(extension))
                 path = path + extension;
             ResourceLocation pathIdentifier = new ResourceLocation(rootIdentifier.getNamespace(), path);
-            return resourceManager.hasResource(pathIdentifier) ? pathIdentifier : null;
+            return resourceManager.getResource(pathIdentifier).isPresent() ? pathIdentifier : null;
         }
 
         ResourceLocation pathIdentifier = new ResourceLocation(path);
@@ -67,17 +67,17 @@ public abstract class CITType {
             path = path.substring(2);
         else if (!path.contains("..")) {
             pathIdentifier = new ResourceLocation(pathIdentifier.getNamespace(), path);
-            if (resourceManager.hasResource(pathIdentifier))
+            if (resourceManager.getResource(pathIdentifier).isPresent())
                 return pathIdentifier;
             else if (path.startsWith("assets/")) {
                 path = path.substring(7);
                 int sep = path.indexOf('/');
                 pathIdentifier = new ResourceLocation(path.substring(0, sep), path.substring(sep + 1));
-                if (resourceManager.hasResource(pathIdentifier))
+                if (resourceManager.getResource(pathIdentifier).isPresent())
                     return pathIdentifier;
             }
             pathIdentifier = new ResourceLocation(pathIdentifier.getNamespace(), defaultedTypeDirectory + "/" + path);
-            if (resourceManager.hasResource(pathIdentifier))
+            if (resourceManager.getResource(pathIdentifier).isPresent())
                 return pathIdentifier;
         }
 
@@ -99,7 +99,7 @@ public abstract class CITType {
 
         pathIdentifier = new ResourceLocation(rootIdentifier.getNamespace(), path);
 
-        return resourceManager.hasResource(pathIdentifier) ? pathIdentifier : null;
+        return resourceManager.getResource(pathIdentifier).isPresent() ? pathIdentifier : null;
     }
 
     public static ResourceLocation resolveAsset(ResourceLocation rootIdentifier, PropertyValue path, String defaultedTypeDirectory, String extension, ResourceManager resourceManager) {

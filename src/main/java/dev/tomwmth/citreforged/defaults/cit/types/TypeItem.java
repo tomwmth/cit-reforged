@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -68,12 +68,12 @@ public class TypeItem extends CITType {
             if (condition instanceof ConditionItems conditionItems)
                 items.addAll(Arrays.asList(conditionItems.items));
 
-        if (this.items.size() == 0)
+        if (this.items.isEmpty())
             try {
                 ResourceLocation propertiesName = ResourceLocation.tryParse(properties.stripName());
-                if (!Registry.ITEM.containsKey(propertiesName))
+                if (!BuiltInRegistries.ITEM.containsKey(propertiesName))
                     throw new Exception();
-                Item item = Registry.ITEM.get(propertiesName);
+                Item item = BuiltInRegistries.ITEM.get(propertiesName);
                 conditions.add(new ConditionItems(item));
                 this.items.add(item);
             } catch (Exception ignored) {
@@ -178,11 +178,11 @@ public class TypeItem extends CITType {
                 if (!assetIdentifiers.isEmpty()) { // contains sub models
                     LinkedHashMap<ResourceLocation, List<ItemOverride.Predicate>> overrideConditions = new LinkedHashMap<>();
                     for (Item item : this.items) {
-                        ResourceLocation itemIdentifier = Registry.ITEM.getKey(item);
+                        ResourceLocation itemIdentifier = BuiltInRegistries.ITEM.getKey(item);
                         overrideConditions.put(new ResourceLocation(itemIdentifier.getNamespace(), "item/" + itemIdentifier.getPath()), Collections.emptyList());
 
                         ResourceLocation itemModelIdentifier = new ResourceLocation(itemIdentifier.getNamespace(), "models/item/" + itemIdentifier.getPath() + ".json");
-                        try (Reader resourceReader = new InputStreamReader(resourceManager.getResource(itemModelIdentifier).getInputStream())) {
+                        try (Reader resourceReader = new InputStreamReader(resourceManager.getResource(itemModelIdentifier).orElseThrow().open())) {
                             BlockModel itemModelJson = BlockModel.fromStream(resourceReader);
 
                             if (itemModelJson.getOverrides() != null && !itemModelJson.getOverrides().isEmpty())
@@ -262,11 +262,11 @@ public class TypeItem extends CITType {
                 if (!this.assetIdentifiers.isEmpty()) { // contains sub models
                     LinkedHashMap<ResourceLocation, List<ItemOverride.Predicate>> overrideConditions = new LinkedHashMap<>();
                     for (Item item : this.items) {
-                        ResourceLocation itemIdentifier = Registry.ITEM.getKey(item);
+                        ResourceLocation itemIdentifier = BuiltInRegistries.ITEM.getKey(item);
                         overrideConditions.put(new ResourceLocation(itemIdentifier.getNamespace(), "item/" + itemIdentifier.getPath()), Collections.emptyList());
 
                         ResourceLocation itemModelIdentifier = new ResourceLocation(itemIdentifier.getNamespace(), "models/item/" + itemIdentifier.getPath() + ".json");
-                        try (Reader resourceReader = new InputStreamReader( resourceManager.getResource(itemModelIdentifier).getInputStream())) {
+                        try (Reader resourceReader = new InputStreamReader( resourceManager.getResource(itemModelIdentifier).orElseThrow().open())) {
                             BlockModel itemModelJson = BlockModel.fromStream(resourceReader);
 
                             if (itemModelJson.getOverrides() != null && !itemModelJson.getOverrides().isEmpty())
@@ -308,7 +308,7 @@ public class TypeItem extends CITType {
         }
         BlockModel json;
         if (identifier.getPath().endsWith(".json")) {
-            try (InputStream is = resourceManager.getResource(identifier).getInputStream()) {
+            try (InputStream is = resourceManager.getResource(identifier).orElseThrow().open()) {
                 json = BlockModel.fromString(IOUtils.toString(is, StandardCharsets.UTF_8));
                 json.name = assetIdentifier.toString();
                 json.name = json.name.substring(0, json.name.length() - 5);
@@ -415,12 +415,12 @@ public class TypeItem extends CITType {
     }
 
     private BlockModel getModelForFirstItemType(ResourceManager resourceManager) {
-        ResourceLocation firstItemIdentifier = Registry.ITEM.getKey(this.items.iterator().next()), firstItemModelIdentifier = new ResourceLocation(firstItemIdentifier.getNamespace(), "models/item/" + firstItemIdentifier.getPath() + ".json");
-        try (InputStream is = resourceManager.getResource(firstItemModelIdentifier).getInputStream()) {
+        ResourceLocation firstItemIdentifier = BuiltInRegistries.ITEM.getKey(this.items.iterator().next()), firstItemModelIdentifier = new ResourceLocation(firstItemIdentifier.getNamespace(), "models/item/" + firstItemIdentifier.getPath() + ".json");
+        try (InputStream is = resourceManager.getResource(firstItemModelIdentifier).orElseThrow().open()) {
             BlockModel json = BlockModel.fromString(IOUtils.toString(is, StandardCharsets.UTF_8));
 
             if (((BlockModelAccessor) json).getParentLocation().equals(new ResourceLocation("minecraft", "item/template_spawn_egg"))) { // HOTFIX: Fixes not being able to change spawn eggs using texture cits
-                try (InputStream parentInputStream = resourceManager.getResource(new ResourceLocation("minecraft", "models/item/template_spawn_egg.json")).getInputStream()) {
+                try (InputStream parentInputStream = resourceManager.getResource(new ResourceLocation("minecraft", "models/item/template_spawn_egg.json")).orElseThrow().open()) {
                     json = BlockModel.fromString(IOUtils.toString(parentInputStream, StandardCharsets.UTF_8));
                     ((BlockModelAccessor) json).getTextureMap().remove("layer1"); // PARITY
                 }
@@ -440,7 +440,7 @@ public class TypeItem extends CITType {
 
     private BlockModel getModelFromOverrideModel(ResourceManager resourceManager, ResourceLocation overrideModel) {
         ResourceLocation modelIdentifier = new ResourceLocation(overrideModel.getNamespace(), "models/" + overrideModel.getPath() + ".json");
-        try (InputStream is = resourceManager.getResource(modelIdentifier).getInputStream()) {
+        try (InputStream is = resourceManager.getResource(modelIdentifier).orElseThrow().open()) {
             BlockModel json = BlockModel.fromString(IOUtils.toString(is, StandardCharsets.UTF_8));
 
             if (!GENERATED_SUB_CITS_SEEN.add(modelIdentifier)) // cit generated duplicate

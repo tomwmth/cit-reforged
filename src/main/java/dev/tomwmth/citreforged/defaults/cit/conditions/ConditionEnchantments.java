@@ -8,7 +8,7 @@ import dev.tomwmth.citreforged.cit.builtin.conditions.IdentifierCondition;
 import dev.tomwmth.citreforged.cit.builtin.conditions.ListCondition;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Set;
@@ -40,7 +40,7 @@ public class ConditionEnchantments extends ListCondition<ConditionEnchantments.E
         public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
             super.load(value, properties);
 
-            if (!Registry.ENCHANTMENT.containsKey(this.value))
+            if (!BuiltInRegistries.ENCHANTMENT.containsKey(this.value))
                 warn(this.value + " is not in the enchantment registry", value, properties);
         }
 

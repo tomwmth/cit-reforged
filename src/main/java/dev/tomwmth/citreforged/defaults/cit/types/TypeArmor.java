@@ -6,7 +6,7 @@ import dev.tomwmth.citreforged.defaults.cit.conditions.ConditionItems;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
 import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -42,9 +42,9 @@ public class TypeArmor extends CITType {
         if (!itemsConditionPresent)
             try {
                 ResourceLocation propertiesName = ResourceLocation.tryParse(properties.stripName());
-                if (!Registry.ITEM.containsKey(propertiesName))
+                if (!BuiltInRegistries.ITEM.containsKey(propertiesName))
                     throw new Exception();
-                Item item = Registry.ITEM.get(propertiesName);
+                Item item = BuiltInRegistries.ITEM.get(propertiesName);
                 if (!(item instanceof ArmorItem))
                     throw new Exception();
                 conditions.add(new ConditionItems(item));

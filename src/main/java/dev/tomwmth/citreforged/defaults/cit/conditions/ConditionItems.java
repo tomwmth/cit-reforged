@@ -7,7 +7,7 @@ import dev.tomwmth.citreforged.cit.builtin.conditions.IdentifierCondition;
 import dev.tomwmth.citreforged.cit.builtin.conditions.ListCondition;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -58,8 +58,8 @@ public class ConditionItems extends ListCondition<ConditionItems.ItemCondition> 
         public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
             super.load(value, properties);
 
-            if (Registry.ITEM.containsKey(this.value))
-                this.item = Registry.ITEM.get(this.value);
+            if (BuiltInRegistries.ITEM.containsKey(this.value))
+                this.item = BuiltInRegistries.ITEM.get(this.value);
             else {
                 this.item = null;
                 warn(this.value + " is not in the item registry", value, properties);
