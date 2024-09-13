@@ -6,6 +6,9 @@ A fork of CIT Resewn for the Forge Mod Loader. It is a standalone implementation
 
 > Because not everyone should have to use OptiFine
 
+## Download
+Releases are available on [Modrinth](https://modrinth.com/mod/citreforged).
+
 ## Ethos
 The existence of this fork is driven purely by the requirements of a separate project I am involved in. As a result, the development direction is largely dictated that other project. I am unlikely to do any work that isn't specifically needed by it. That being said, contributions are welcome if you find that some of the corners I have cut are not acceptable for your needs.
 
