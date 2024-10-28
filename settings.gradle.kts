@@ -5,3 +5,5 @@ pluginManagement {
         maven("https://maven.parchmentmc.org/")
     }
 }
+
+rootProject.name = "CIT Reforged"
