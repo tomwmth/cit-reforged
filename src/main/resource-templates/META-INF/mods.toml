@@ -23,7 +23,7 @@ showAsResourcePack = false
 [[dependencies.{{ modId }}]]
     modId = "forge"
     mandatory = true
-    versionRange = "[40,)"
+    versionRange = "[45,)"
     ordering = "NONE"
     side = "CLIENT"
 
