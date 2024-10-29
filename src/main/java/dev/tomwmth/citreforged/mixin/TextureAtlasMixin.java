@@ -1,4 +1,4 @@
-package dev.tomwmth.citreforged.mixin.defaults.common;
+package dev.tomwmth.citreforged.mixin;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
