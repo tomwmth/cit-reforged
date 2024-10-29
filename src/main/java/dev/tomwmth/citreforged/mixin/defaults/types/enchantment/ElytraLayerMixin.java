@@ -18,7 +18,7 @@ public abstract class ElytraLayerMixin {
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"))
     private void citresewn$enchantment$setAppliedContextAndStartApplyingElytra(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, LivingEntity livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
         if (CONTAINER.active())
-            CONTAINER.setContext(new CITContext(livingEntity.getItemBySlot(EquipmentSlot.CHEST), livingEntity.getLevel(), livingEntity)).apply();
+            CONTAINER.setContext(new CITContext(livingEntity.getItemBySlot(EquipmentSlot.CHEST), livingEntity.level(), livingEntity)).apply();
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))

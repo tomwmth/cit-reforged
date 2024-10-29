@@ -36,7 +36,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
 
         ItemStack equippedStack = CONTAINER.getVisualItemInSlot(entity, armorSlot);
 
-        CIT<TypeArmor> cit = CONTAINER.getCIT(new CITContext(equippedStack, entity.getLevel(), entity));
+        CIT<TypeArmor> cit = CONTAINER.getCIT(new CITContext(equippedStack, entity.level(), entity));
         if (cit != null) {
             this.citresewn$cachedTextures = cit.type.textures;
         }

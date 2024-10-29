@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
 public final class CITReforged {
     public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_NAME);
 
-    public CITReforged() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent ev) -> CITRegistry.registerAll());
+    public CITReforged(FMLJavaModLoadingContext context) {
+        context.getModEventBus().addListener((FMLClientSetupEvent ev) -> CITRegistry.registerAll());
     }
 
     public static void logWarning(String message, Object... params) {

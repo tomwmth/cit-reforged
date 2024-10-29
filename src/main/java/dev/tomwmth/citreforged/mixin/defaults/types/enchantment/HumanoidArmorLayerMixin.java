@@ -19,7 +19,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     @Inject(method = "renderArmorPiece", at = @At("HEAD"))
     private void citresewn$enchantment$setAppliedContextAndStartApplyingArmor(PoseStack matrices, MultiBufferSource vertexConsumers, T livingEntity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci) {
         if (CONTAINER.active())
-            CONTAINER.setContext(new CITContext(livingEntity.getItemBySlot(armorSlot), livingEntity.getLevel(), livingEntity)).apply();
+            CONTAINER.setContext(new CITContext(livingEntity.getItemBySlot(armorSlot), livingEntity.level(), livingEntity)).apply();
     }
 
     @Inject(method = "renderArmorPiece", at = @At("RETURN"))

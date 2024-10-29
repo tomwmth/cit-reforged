@@ -15,7 +15,7 @@ The existence of this fork is driven purely by the requirements of a separate pr
 ## Versions
 - 1.18.2
 - 1.19.4
-- 1.20.1 (planned)
+- 1.20.1
 - 1.20.6 (planned)
 
 ## Changes

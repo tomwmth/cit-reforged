@@ -33,7 +33,7 @@ public abstract class ElytraLayerMixin {
         if (!equippedStack.is(Items.ELYTRA))
             return;
 
-        CIT<TypeElytra> cit = CONTAINER.getCIT(new CITContext(equippedStack, livingEntity.getLevel(), livingEntity));
+        CIT<TypeElytra> cit = CONTAINER.getCIT(new CITContext(equippedStack, livingEntity.level(), livingEntity));
         WINGS_LOCATION = cit == null ? citresewn$ORIGINAL_SKIN : cit.type.texture;
     }
 
