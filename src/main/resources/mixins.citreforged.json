@@ -16,6 +16,7 @@
   ],
   "client": [
     "ModelBakeryMixin",
+    "StitchResultMixin",
     "defaults.common.ModelBakeryMixin",
     "defaults.types.armor.HumanoidArmorLayerMixin",
     "defaults.types.elytra.ElytraLayerMixin",
