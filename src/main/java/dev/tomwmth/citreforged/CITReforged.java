@@ -4,7 +4,7 @@ import dev.tomwmth.citreforged.Reference;
 import dev.tomwmth.citreforged.cit.CITRegistry;
 import dev.tomwmth.citreforged.config.CITResewnConfig;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ public final class CITReforged {
     public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_NAME);
 
     public CITReforged() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent ev) -> CITRegistry.registerAll());
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLConstructModEvent ev) -> CITRegistry.registerAll());
     }
 
     public static void logWarning(String message, Object... params) {
