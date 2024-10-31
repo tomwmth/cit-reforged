@@ -16,7 +16,8 @@ The existence of this fork is driven purely by the requirements of a separate pr
 - 1.18.2
 - 1.19.4
 - 1.20.1
-- 1.20.6 (planned)
+- 1.20.6
+- 1.21.X (planned)
 
 ## Changes
 - Defaults is no longer a seperate mod

@@ -59,7 +59,7 @@ public abstract class ItemRendererMixin {
             return;
         VertexConsumer vertexConsumer = TypeEnchantment.GlintRenderLayer.GLINT.tryApply(null, layer, provider);
         if (vertexConsumer != null)
-            cir.setReturnValue(VertexMultiConsumer.create(new SheetedDecalTextureGenerator(vertexConsumer, entry.pose(), entry.normal(), 1.0F), cir.getReturnValue()));
+            cir.setReturnValue(VertexMultiConsumer.create(new SheetedDecalTextureGenerator(vertexConsumer, entry, 1.0F), cir.getReturnValue()));
     }
 
     @Inject(method = "getCompassFoilBufferDirect", cancellable = true, at = @At("RETURN"))
@@ -68,7 +68,7 @@ public abstract class ItemRendererMixin {
             return;
         VertexConsumer vertexConsumer = TypeEnchantment.GlintRenderLayer.DIRECT_GLINT.tryApply(null, layer, provider);
         if (vertexConsumer != null)
-            cir.setReturnValue(VertexMultiConsumer.create(new SheetedDecalTextureGenerator(vertexConsumer, entry.pose(), entry.normal(), 1.0F), cir.getReturnValue()));
+            cir.setReturnValue(VertexMultiConsumer.create(new SheetedDecalTextureGenerator(vertexConsumer, entry, 1.0F), cir.getReturnValue()));
     }
 
     @Inject(method = "getFoilBuffer", cancellable = true, at = @At("RETURN"))

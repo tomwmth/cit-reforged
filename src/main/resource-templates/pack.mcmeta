@@ -1,8 +1,6 @@
 {
   "pack": {
-    "description": {
-      "text": "{{ modName }} resources"
-    },
-    "pack_format": 15
+    "description": "{{ modName }} resources",
+    "pack_format": 32
   }
 }

@@ -24,7 +24,6 @@
     "defaults.types.enchantment.HumanoidArmorLayerMixin",
     "defaults.types.enchantment.ItemRendererMixin",
     "defaults.types.enchantment.MinecraftMixin",
-    "defaults.types.enchantment.RenderBuffersAccessor",
     "defaults.types.enchantment.RenderStateShardAccessor",
     "defaults.types.item.BlockModelAccessor",
     "defaults.types.item.ItemRendererMixin",

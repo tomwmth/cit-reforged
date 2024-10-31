@@ -86,7 +86,7 @@ public final class CITRegistry {
         }
 
         CITCondition condition = conditionContainer.createCondition.get();
-        condition.load(value, properties);
+        condition.load(key, value, properties);
         return condition;
     }
 

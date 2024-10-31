@@ -4,6 +4,7 @@ import dev.tomwmth.citreforged.CITReforged;
 import dev.tomwmth.citreforged.api.CITConditionContainer;
 import dev.tomwmth.citreforged.config.CITResewnConfig;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
+import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
 
 import java.util.Collections;
@@ -18,11 +19,13 @@ import java.util.Set;
 public abstract class CITCondition {
     /**
      * Parses the given property value into the condition.
-     * @param value value to read
+     *
+     * @param key        key for this condition
+     * @param value      value to read
      * @param properties the group containing value
      * @throws CITParsingException if errored while parsing the condition
      */
-    public abstract void load(PropertyValue value, PropertyGroup properties) throws CITParsingException;
+    public abstract void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException;
 
     /**
      * @return a set of classes of conditions that have integration with this condition

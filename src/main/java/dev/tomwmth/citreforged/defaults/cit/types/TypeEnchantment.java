@@ -6,7 +6,6 @@ import dev.tomwmth.citreforged.api.CITGlobalProperties;
 import dev.tomwmth.citreforged.api.CITTypeContainer;
 import dev.tomwmth.citreforged.cit.*;
 import dev.tomwmth.citreforged.defaults.config.CITResewnDefaultsConfig;
-import dev.tomwmth.citreforged.mixin.defaults.types.enchantment.RenderBuffersAccessor;
 import dev.tomwmth.citreforged.mixin.defaults.types.enchantment.RenderStateShardAccessor;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
 import dev.tomwmth.citreforged.pack.format.PropertyKey;
@@ -145,7 +144,7 @@ public class TypeEnchantment extends CITType {
                     RenderType renderLayer = glintLayer.build(cit.type, cit.propertiesIdentifier);
 
                     cit.type.renderLayers.put(glintLayer, renderLayer);
-                    ((RenderBuffersAccessor) Minecraft.getInstance().renderBuffers()).getFixedBuffers().put(renderLayer, new BufferBuilder(renderLayer.bufferSize()));
+                    Minecraft.getInstance().renderBuffers().bufferSource().fixedBuffers.put(renderLayer, new BufferBuilder(renderLayer.bufferSize()));
                 }
         }
 
@@ -174,9 +173,11 @@ public class TypeEnchantment extends CITType {
             appliedContext = null;
             apply = false;
 
-            for (CIT<TypeEnchantment> cit : loaded)
-                for (RenderType renderLayer : cit.type.renderLayers.values())
-                    ((RenderBuffersAccessor) Minecraft.getInstance().renderBuffers()).getFixedBuffers().remove(renderLayer);
+            for (CIT<TypeEnchantment> cit : loaded) {
+                for (RenderType renderLayer : cit.type.renderLayers.values()) {
+                    Minecraft.getInstance().renderBuffers().bufferSource().fixedBuffers.remove(renderLayer);
+                }
+            }
 
             loaded.clear();
             loadedLayered.clear();

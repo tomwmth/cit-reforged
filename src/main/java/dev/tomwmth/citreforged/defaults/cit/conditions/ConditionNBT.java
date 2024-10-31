@@ -5,6 +5,7 @@ import dev.tomwmth.citreforged.cit.CITCondition;
 import dev.tomwmth.citreforged.cit.CITContext;
 import dev.tomwmth.citreforged.cit.CITParsingException;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
+import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+@Deprecated
 public class ConditionNBT extends CITCondition {
     public static final CITConditionContainer<ConditionNBT> CONTAINER = new CITConditionContainer<>(ConditionNBT.class, ConditionNBT::new,
             "nbt");
@@ -29,10 +31,20 @@ public class ConditionNBT extends CITCondition {
     protected CompoundTag matchCompound = null;
 
     @Override
-    public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
+    public void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException {
         if (value.keyMetadata() == null || value.keyMetadata().isEmpty())
             throw new CITParsingException("Missing nbt path", properties, value.position());
 
+        String[] nbtPath = value.keyMetadata().split("\\.");
+        for (String s : nbtPath) {
+            if (s.isEmpty())
+                throw new CITParsingException("Path segment cannot be empty", properties, value.position());
+        }
+
+        loadNbtCondition(value, properties, nbtPath, value.value());
+    }
+
+    public void loadNbtCondition(PropertyValue value, PropertyGroup properties, String[] path, String nbtValue) throws CITParsingException {
         path = value.keyMetadata().split("\\.");
         for (String s : path)
             if (s.isEmpty())
@@ -50,7 +62,7 @@ public class ConditionNBT extends CITCondition {
             else
                 matchString = new StringMatcher.DirectMatcher(value.value());
         } catch (PatternSyntaxException e) {
-            throw new CITParsingException("Malformatted regex expression", properties, value.position(), e);
+            throw new CITParsingException("Malformed regex expression", properties, value.position(), e);
         } catch (Exception ignored) { }
         try {
             if (value.value().startsWith("#"))
@@ -82,36 +94,36 @@ public class ConditionNBT extends CITCondition {
 
     @Override
     public boolean test(CITContext context) {
-        return testPath(context.stack.getTag(), 0);
+        throw new AssertionError("NBT condition replaced by component condition in 1.20.5+");
     }
 
-    protected boolean testPath(Tag element, int pathIndex) {
+    protected boolean testPath(Tag element, int pathIndex, CITContext context) {
         if (element == null)
             return false;
 
         if (pathIndex >= path.length)
-            return testValue(element);
+            return testValue(element, context);
 
         final String path = this.path[pathIndex];
         if (path.equals("*")) {
             if (element instanceof CompoundTag compound) {
                 for (Tag subElement : compound.tags.values())
-                    if (testPath(subElement, pathIndex + 1))
+                    if (testPath(subElement, pathIndex + 1, context))
                         return true;
             } else if (element instanceof ListTag list) {
                 for (Tag subElement : list)
-                    if (testPath(subElement, pathIndex + 1))
+                    if (testPath(subElement, pathIndex + 1, context))
                         return true;
             }
         } else {
             if (element instanceof CompoundTag compound)
-                return testPath(compound.get(path), pathIndex + 1);
+                return testPath(compound.get(path), pathIndex + 1, context);
             else if (element instanceof ListTag list) {
                 if (path.equals("count"))
-                    return testValue(IntTag.valueOf(list.size()));
+                    return testValue(IntTag.valueOf(list.size()), context);
 
                 try {
-                    return testPath(list.get(Integer.parseInt(path)), pathIndex + 1);
+                    return testPath(list.get(Integer.parseInt(path)), pathIndex + 1, context);
                 } catch (NumberFormatException | IndexOutOfBoundsException ignored) { }
             }
         }
@@ -119,20 +131,11 @@ public class ConditionNBT extends CITCondition {
         return false;
     }
 
-    private boolean testValue(Tag element) {
+    private boolean testValue(Tag element, CITContext context) {
         try {
-            if (element instanceof StringTag nbtString) { //noinspection ConstantConditions
-                String elementString = nbtString.getAsString();
-                if (matchString.matches(elementString))
-                    return true;
-                for (int i = 0; i < elementString.length(); i++) {
-                    char ch = elementString.charAt(i);
-                    if (Character.isWhitespace(ch))
-                        continue;
-
-                    return matchString.matches(nbtString.getAsString()) || matchString.matches(Component.Serializer.fromJson(nbtString.getAsString()).getString());
-                }
-            } else if (element instanceof IntTag nbtInt && matchInteger != null)
+            if (element instanceof StringTag nbtString)
+                return testString(nbtString.getAsString(), null, context);
+            else if (element instanceof IntTag nbtInt && matchInteger != null)
                 return nbtInt.equals(matchInteger);
             else if (element instanceof ByteTag nbtByte && matchByte != null)
                 return nbtByte.equals(matchByte);
@@ -144,13 +147,28 @@ public class ConditionNBT extends CITCondition {
                 return nbtLong.equals(matchLong);
             else if (element instanceof ShortTag nbtShort && matchShort != null)
                 return nbtShort.equals(matchShort);
-            else if (element instanceof CompoundTag nbtCompound && matchCompound != null)
-                return NbtUtils.compareNbt(matchCompound, nbtCompound, true);
+            else if ((element instanceof CompoundTag || element instanceof ListTag) && matchCompound != null)
+                return NbtUtils.compareNbt(matchCompound, element, true);
 
             if (element instanceof NumericTag nbtNumber && !(matchString instanceof StringMatcher.DirectMatcher))
                 return matchString.matches(String.valueOf(nbtNumber.getAsNumber()));
         } catch (Exception ignored) { }
         return false;
+    }
+
+    public boolean testString(String element, Component elementText, CITContext context) {
+        if (element != null) {
+            if (matchString.matches(element))
+                return true;
+
+            if (elementText == null)
+                elementText = Component.Serializer.fromJson(element, context.world.registryAccess());
+        }
+
+        if (elementText == null)
+            return false;
+
+        return matchString.matches(elementText.getString());
     }
 
     protected static abstract class StringMatcher {

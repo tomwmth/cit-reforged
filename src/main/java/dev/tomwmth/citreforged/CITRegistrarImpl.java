@@ -80,13 +80,13 @@ public final class CITRegistrarImpl implements CITRegistrar {
         impl.register(INBUILT_NAMESPACE, WeightCondition.CONTAINER);
 
         // Defaults
+        impl.register(INBUILT_NAMESPACE, ConditionComponents.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionDamage.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionDamageMask.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionEnchantments.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionEnchantmentLevels.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionHand.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionItems.CONTAINER);
-        impl.register(INBUILT_NAMESPACE, ConditionNBT.CONTAINER);
         impl.register(INBUILT_NAMESPACE, ConditionStackSize.CONTAINER);
 
         impl.register(INBUILT_NAMESPACE, TypeArmor.CONTAINER);

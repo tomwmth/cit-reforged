@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[50,)"
 
 license = "MIT"
 issueTrackerURL = "{{ modRepo }}/issues"
@@ -23,7 +23,7 @@ showAsResourcePack = false
 [[dependencies.{{ modId }}]]
     modId = "forge"
     mandatory = true
-    versionRange = "[47,)"
+    versionRange = "[50,)"
     ordering = "NONE"
     side = "CLIENT"
 

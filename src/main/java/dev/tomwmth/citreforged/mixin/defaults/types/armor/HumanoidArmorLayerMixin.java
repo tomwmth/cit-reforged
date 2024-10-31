@@ -11,14 +11,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
@@ -42,21 +43,19 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
         }
     }
 
-    // Forge introduces their own method for this that is called instead of the vanilla method
-    @Inject(method = "getArmorResource", cancellable = true, at = @At("HEAD"), remap = false)
-    private void citresewn$replaceArmorTexture(Entity entity, ItemStack stack, EquipmentSlot slot, String type, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (this.citresewn$cachedTextures == null)
-            return;
-
-        if (stack.getItem() instanceof ArmorItem armorItem) {
-            ResourceLocation identifier = this.citresewn$cachedTextures.get(
-                    armorItem.getMaterial().getName() + "_layer_" +
-                            (slot == EquipmentSlot.LEGS ? "2" : "1") +
-                            (type == null ? "" : "_" + type)
-            );
-            if (identifier != null) {
-                cir.setReturnValue(identifier);
-            }
+    @SuppressWarnings("UnstableApiUsage")
+    @Redirect(method = "renderArmorPiece", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraftforge/client/ForgeHooksClient;getArmorTexture(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/ArmorMaterial$Layer;Z)Lnet/minecraft/resources/ResourceLocation;",
+            remap = false
+    ))
+    private ResourceLocation citresewn$replaceArmorTexture(Entity entity, ItemStack armor, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean inner) {
+        if (citresewn$cachedTextures != null) {
+            String layerPath = layer.texture(inner).getPath();
+            ResourceLocation identifier = citresewn$cachedTextures.get(layerPath.substring("textures/models/armor/".length(), layerPath.length() - ".png".length()));
+            if (identifier != null)
+                return identifier;
         }
+        return ForgeHooksClient.getArmorTexture(entity, armor, slot, layer, inner);
     }
 }

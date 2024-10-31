@@ -4,6 +4,7 @@ import dev.tomwmth.citreforged.cit.CITCondition;
 import dev.tomwmth.citreforged.cit.CITContext;
 import dev.tomwmth.citreforged.cit.CITParsingException;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
+import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +28,7 @@ public abstract class IdentifierCondition extends CITCondition {
     }
 
     @Override
-    public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
+    public void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException {
         try {
             this.value = ResourceLocation.tryParse(value.value());
         } catch (ResourceLocationException ex) {

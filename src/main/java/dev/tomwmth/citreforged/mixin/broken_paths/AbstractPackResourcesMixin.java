@@ -27,7 +27,7 @@ public abstract class AbstractPackResourcesMixin implements PackResources {
                 }
             }
             catch (ResourceLocationException ex) {
-                cir.setReturnValue((T) new PackMetadataSection(cir.getReturnValue().getDescription(), Integer.MAX_VALUE - 53));
+                cir.setReturnValue((T) new PackMetadataSection(cir.getReturnValue().description(), Integer.MAX_VALUE - 53, cir.getReturnValue().supportedFormats()));
             }
             catch (Exception ignored) {}
         }

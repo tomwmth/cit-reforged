@@ -6,6 +6,7 @@ import dev.tomwmth.citreforged.cit.CITParsingException;
 import dev.tomwmth.citreforged.cit.builtin.conditions.IdentifierCondition;
 import dev.tomwmth.citreforged.cit.builtin.conditions.ListCondition;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
+import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -30,8 +31,8 @@ public class ConditionItems extends ListCondition<ConditionItems.ItemCondition> 
     }
 
     @Override
-    public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
-        super.load(value, properties);
+    public void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException {
+        super.load(key, value, properties);
 
         Set<Item> items = new LinkedHashSet<>();
 
@@ -55,8 +56,8 @@ public class ConditionItems extends ListCondition<ConditionItems.ItemCondition> 
         public Item item = null;
 
         @Override
-        public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
-            super.load(value, properties);
+        public void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException {
+            super.load(key, value, properties);
 
             if (BuiltInRegistries.ITEM.containsKey(this.value))
                 this.item = BuiltInRegistries.ITEM.get(this.value);

@@ -4,6 +4,7 @@ import dev.tomwmth.citreforged.cit.CITCondition;
 import dev.tomwmth.citreforged.cit.CITContext;
 import dev.tomwmth.citreforged.cit.CITParsingException;
 import dev.tomwmth.citreforged.pack.format.PropertyGroup;
+import dev.tomwmth.citreforged.pack.format.PropertyKey;
 import dev.tomwmth.citreforged.pack.format.PropertyValue;
 
 import java.lang.reflect.Array;
@@ -59,12 +60,12 @@ public abstract class ListCondition<T extends CITCondition> extends CITCondition
     }
 
     @Override
-    public void load(PropertyValue value, PropertyGroup properties) throws CITParsingException {
+    public void load(PropertyKey key, PropertyValue value, PropertyGroup properties) throws CITParsingException {
         List<T> conditions = new ArrayList<>();
 
         for (String conditionValue : delimiter.split(value.value())) {
             T condition = conditionSupplier.get();
-            condition.load(new PropertyValue(value.keyMetadata(), conditionValue, value.separator(), value.position(), value.propertiesIdentifier(), value.packName()), properties);
+            condition.load(key, new PropertyValue(value.keyMetadata(), conditionValue, value.separator(), value.position(), value.propertiesIdentifier(), value.packName()), properties);
             conditions.add(condition);
         }
 

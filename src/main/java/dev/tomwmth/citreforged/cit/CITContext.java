@@ -1,13 +1,12 @@
 package dev.tomwmth.citreforged.cit;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
@@ -53,9 +52,8 @@ public class CITContext {
     public Map<ResourceLocation, Integer> enchantments() {
         if (this.enchantments == null) {
             this.enchantments = new LinkedHashMap<>();
-            for (Tag nbtElement : stack.is(Items.ENCHANTED_BOOK) ? EnchantedBookItem.getEnchantments(stack) : stack.getEnchantmentTags()) {
-                CompoundTag nbtCompound = (CompoundTag) nbtElement;
-                this.enchantments.put(EnchantmentHelper.getEnchantmentId(nbtCompound), EnchantmentHelper.getEnchantmentLevel(nbtCompound));
+            for (Map.Entry<Holder<Enchantment>, Integer> entry : EnchantmentHelper.getEnchantmentsForCrafting(stack).entrySet()) {
+                this.enchantments.put(entry.getKey().unwrapKey().map(ResourceKey::location).orElseGet(() -> ResourceLocation.parse("unregistered")), entry.getValue());
             }
         }
         return this.enchantments;

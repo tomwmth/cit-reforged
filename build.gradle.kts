@@ -48,9 +48,18 @@ repositories {
 
 dependencies {
     "minecraft"("net.minecraftforge:forge:${mcVersion}-${fmlVersion}")
-    implementation(fg.deobf("me.djtheredstoner:DevAuth-forge-latest:1.2.1"))
+    implementation("me.djtheredstoner:DevAuth-forge-latest:1.2.1")
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+
+    // A workaround required by Forge for some reason
+    implementation("net.sf.jopt-simple:jopt-simple:5.0.4") {
+        version {
+            strictly("5.0.4")
+        }
+    }
 }
+
+
 
 sourceSets {
     main {
@@ -68,6 +77,13 @@ sourceSets {
                 property("mcVersion", mcVersion)
             }
         }
+    }
+
+    // A workaround required by Forge for some reason
+    all {
+        val dir = layout.buildDirectory.dir("sourcesSets/${name}")
+        output.setResourcesDir(dir)
+        java.destinationDirectory.set(dir)
     }
 }
 
@@ -90,5 +106,5 @@ tasks.jar {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }

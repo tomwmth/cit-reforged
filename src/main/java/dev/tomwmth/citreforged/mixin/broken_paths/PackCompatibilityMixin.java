@@ -1,8 +1,8 @@
 package dev.tomwmth.citreforged.mixin.broken_paths;
 
 import dev.tomwmth.citreforged.config.BrokenPaths;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.PackCompatibility;
+import net.minecraft.util.InclusiveRange;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -25,8 +25,8 @@ public abstract class PackCompatibilityMixin {
         throw new AssertionError();
     }
 
-    @Inject(method = "forFormat", cancellable = true, at = @At("HEAD"))
-    private static void citresewn$brokenpaths$redirectBrokenPathsCompatibility(int current, PackType type, CallbackInfoReturnable<PackCompatibility> cir) {
+    @Inject(method = "forVersion", cancellable = true, at = @At("HEAD"))
+    private static void citresewn$brokenpaths$redirectBrokenPathsCompatibility(InclusiveRange<Integer> pRange, int current, CallbackInfoReturnable<PackCompatibility> cir) {
         if (current == Integer.MAX_VALUE - 53)
             cir.setReturnValue(BROKEN_PATHS);
     }
