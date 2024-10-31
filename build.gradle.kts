@@ -21,6 +21,9 @@ group = "${modGroup}.${modId}"
 version = "${mcVersion}-${modVersion}"
 
 minecraft {
+    // Since 1.20.6, Forge uses Mojang mappings at runtime in both dev and prod
+    reobf = false
+
     mappings("parchment", "${parchmentVersion}-${mcVersion}")
     accessTransformer("src/main/resources/META-INF/accesstransformer.cfg")
 
@@ -58,8 +61,6 @@ dependencies {
         }
     }
 }
-
-
 
 sourceSets {
     main {
