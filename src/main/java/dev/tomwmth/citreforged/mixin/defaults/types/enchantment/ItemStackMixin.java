@@ -11,11 +11,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements TypeEnchantment.CITCacheEnchantment {
-    @Unique private final CITCache.MultiList<TypeEnchantment> citresewn$cacheTypeEnchantment = new CITCache.MultiList<>(TypeEnchantment.CONTAINER::getRealTimeCIT);
+    @Unique private volatile CITCache.MultiList<TypeEnchantment> citresewn$cacheTypeEnchantment;
 
     @Override
     public CITCache.MultiList<TypeEnchantment> citresewn$getCacheTypeEnchantment() {
-        return this.citresewn$cacheTypeEnchantment;
+        CITCache.MultiList<TypeEnchantment> cache = this.citresewn$cacheTypeEnchantment;
+        if (cache == null) {
+            synchronized (this) {
+                cache = this.citresewn$cacheTypeEnchantment;
+                if (cache == null) {
+                    cache = new CITCache.MultiList<>(TypeEnchantment.CONTAINER::getRealTimeCIT);
+                    this.citresewn$cacheTypeEnchantment = cache;
+                }
+            }
+        }
+        return cache;
     }
 
     @Inject(method = "hasFoil", cancellable = true, at = @At("HEAD"))

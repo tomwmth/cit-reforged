@@ -8,10 +8,20 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements TypeElytra.CITCacheElytra {
-    @Unique private final CITCache.Single<TypeElytra> citresewn$cacheTypeElytra = new CITCache.Single<>(TypeElytra.CONTAINER::getRealTimeCIT);
+    @Unique private volatile CITCache.Single<TypeElytra> citresewn$cacheTypeElytra;
 
     @Override
     public CITCache.Single<TypeElytra> citresewn$getCacheTypeElytra() {
-        return this.citresewn$cacheTypeElytra;
+        CITCache.Single<TypeElytra> cache = this.citresewn$cacheTypeElytra;
+        if (cache == null) {
+            synchronized (this) {
+                cache = this.citresewn$cacheTypeElytra;
+                if (cache == null) {
+                    cache = new CITCache.Single<>(TypeElytra.CONTAINER::getRealTimeCIT);
+                    this.citresewn$cacheTypeElytra = cache;
+                }
+            }
+        }
+        return cache;
     }
 }
