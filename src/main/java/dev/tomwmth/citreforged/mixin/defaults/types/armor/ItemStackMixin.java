@@ -8,10 +8,20 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements TypeArmor.CITCacheArmor {
-    @Unique private final CITCache.Single<TypeArmor> citresewn$cacheTypeArmor = new CITCache.Single<>(TypeArmor.CONTAINER::getRealTimeCIT);
+    @Unique private volatile CITCache.Single<TypeArmor> citresewn$cacheTypeArmor;
 
     @Override
     public CITCache.Single<TypeArmor> citresewn$getCacheTypeArmor() {
-        return this.citresewn$cacheTypeArmor;
+        CITCache.Single<TypeArmor> cache = this.citresewn$cacheTypeArmor;
+        if (cache == null) {
+            synchronized (this) {
+                cache = this.citresewn$cacheTypeArmor;
+                if (cache == null) {
+                    cache = new CITCache.Single<>(TypeArmor.CONTAINER::getRealTimeCIT);
+                    this.citresewn$cacheTypeArmor = cache;
+                }
+            }
+        }
+        return cache;
     }
 }
